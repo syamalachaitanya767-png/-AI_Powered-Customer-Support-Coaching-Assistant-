@@ -1,0 +1,16 @@
+services:
+  # Option 1: Unified Full-Stack Web Service (Single Port, Zero-CORS)
+  - type: web
+    name: ai-customer-support-assistant
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: "npm --prefix frontend install && npm --prefix frontend run build && pip install -r requirements.txt"
+    startCommand: "gunicorn --chdir backend app:app --workers 1 --threads 4 --timeout 120 --bind 0.0.0.0:$PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: OPENROUTER_API_KEY
+        sync: false # User enters their own key in Render dashboard
+      - key: MODEL_NAME
+        value: nvidia/nemotron-3-nano-30b-a3b:free
